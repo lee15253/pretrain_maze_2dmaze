@@ -125,7 +125,7 @@ class Workspace:
                 name = cfg.wandb_name
             # hydra -> wandb config
             config = omegaconf.OmegaConf.to_container(cfg, resolve=True, throw_on_missing=True)
-            wandb.init(project="edl-kakao", group=cfg.agent.name, name=name, config=config)
+            wandb.init(project="edl_kakao", group=cfg.agent.name, name=name, config=config)
 
         # get meta specs
         meta_specs_smm = self.agent.smm.get_meta_specs()

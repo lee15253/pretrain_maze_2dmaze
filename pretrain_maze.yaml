@@ -19,7 +19,7 @@ eval_every_frames: 10000
 num_eval_episodes: 10
 # snapshot
 snapshots: [100000, 500000, 1000000, 2000000, 2500000, 4000000, 6000000, 8000000, 9000000]
-snapshot_dir: ../../../models/${obs_type}/${domain}/${maze_type}/${agent.name}/${seed}
+snapshot_dir: ../../../pretrained_models/${agent.name}/${maze_type}/${now:%Y.%m.%d}/${now:%H%M%S}_${agent.skill_dim}_${maximum_timestep}/${seed}
 load_snapshot_dir: ../../../models/states/maze/edl/1/snapshot_2500000.pt
 # replay buffer
 replay_buffer_size: 1000000
