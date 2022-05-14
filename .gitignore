@@ -1,0 +1,7 @@
+**/*.pyc
+**/*.npz
+**/*.csv
+**/*.log
+exp_local/
+**/*.mp4
+**/*.pt

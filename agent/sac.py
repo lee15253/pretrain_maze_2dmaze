@@ -368,9 +368,9 @@ class SACAgent:
         
         # optimize actor
         # self.actor_opt.zero_grad(set_to_none=True)  FIXME:
-        self.actor_opt.zero_grad()
-        actor_loss.backward()
-        self.actor_opt.step()
+        # self.actor_opt.zero_grad()
+        # actor_loss.backward()
+        # self.actor_opt.step()
 
         # optimize alpha
         self.log_alpha_opt.zero_grad()
