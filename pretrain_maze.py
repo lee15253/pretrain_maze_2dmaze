@@ -251,8 +251,12 @@ class Workspace:
         # imageio.imwrite('abcd.png', rgb_img)
 
         # check state coverage (10x10 격자를 몇개 채웠는지)
-        state_coveraged_avg = self.eval_env.state_coverage(trajectory_all=trajectory_all,
-                                                           skill_dim=self.agent.smm.z_dim)
+        state_coveraged_1 = self.eval_env.state_coverage_1(trajectory_all=trajectory_all,
+                                                           skill_dim=self.agent.skill_dim)
+        state_coveraged_2 = self.eval_env.state_coverage_2(trajectory_all=trajectory_all,
+                                                           skill_dim=self.agent.skill_dim)
+        log(f'state_coveraged(out of {num_bucket} bucekts)', state_coveraged_1)
+        log(f'new_state_coveraged(out of {num_bucket} bucekts)', state_coveraged_2)
 
         if self.maze_type == 'AntU':
             num_bucket = 150
