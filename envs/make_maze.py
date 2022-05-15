@@ -99,13 +99,29 @@ class DMCStyleWrapper:
         else:
             self._env.maze.plot_trajectory(trajectory_all=trajectory, save_dir = save_dir, step = step, use_wandb=use_wandb, goal=goal)
 
-    def state_coverage(self, trajectory_all, skill_dim):
-        if self.maze_type == 'AntU':
-            state_cov_avg = self._env.state_coverage(trajectory_all=trajectory_all, skill_dim=skill_dim)
+    # def state_coverage(self, trajectory_all, skill_dim):
+    #     if self.maze_type == 'AntU':
+    #         state_cov_avg = self._env.state_coverage(trajectory_all=trajectory_all, skill_dim=skill_dim)
+    #     else:
+    #         state_cov_avg = self._env.maze.state_coverage(trajectory_all=trajectory_all, skill_dim=skill_dim)
+        
+    #     return state_cov_avg
+    def state_coverage_1(self, trajectory_all, skill_dim):
+        if self.maze_type in ['AntU','AntFb','AntMaze']:
+            state_cov_avg = self._env.state_coverage_1(trajectory_all=trajectory_all, skill_dim=skill_dim)
         else:
-            state_cov_avg = self._env.maze.state_coverage(trajectory_all=trajectory_all, skill_dim=skill_dim)
+            state_cov_avg = self._env.maze.state_coverage_1(trajectory_all=trajectory_all, skill_dim=skill_dim)
         
         return state_cov_avg
+
+    def state_coverage_2(self, trajectory_all, skill_dim):
+        if self.maze_type in ['AntU','AntFb','AntMaze']:
+            state_cov_avg = self._env.state_coverage_2(trajectory_all=trajectory_all, skill_dim=skill_dim)
+        else:
+            state_cov_avg = self._env.maze.state_coverage_2(trajectory_all=trajectory_all, skill_dim=skill_dim)
+        
+        return state_cov_avg
+
 
 
 def make(maze_type=None, maximum_timestep=None, random=False, num_skills=None, train_random=False):

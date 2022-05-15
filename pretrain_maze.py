@@ -332,9 +332,19 @@ class Workspace:
         # imageio.imwrite('abcd.png', rgb_img)
 
         # check state coverage (10x10 격자를 몇개 채웠는지)
-        state_coveraged_avg = self.eval_env.state_coverage(trajectory_all=trajectory_all,
+        # state_coveraged_avg = self.eval_env.state_coverage(trajectory_all=trajectory_all,
+        #                                                    skill_dim=self.agent.skill_dim)
+        # num_learned_skills = np.exp(total_diayn_rw / (self.agent.skill_dim * num_eval_each_skill))
+
+
+        # check state coverage (10x10 격자를 몇개 채웠는지)
+        state_coveraged_1 = self.eval_env.state_coverage_1(trajectory_all=trajectory_all,
+                                                           skill_dim=self.agent.skill_dim)
+        state_coveraged_2 = self.eval_env.state_coverage_2(trajectory_all=trajectory_all,
                                                            skill_dim=self.agent.skill_dim)
         num_learned_skills = np.exp(total_diayn_rw / (self.agent.skill_dim * num_eval_each_skill))
+
+
 
         if self.maze_type == 'AntU':
             num_bucket = 150
@@ -345,7 +355,9 @@ class Workspace:
             # log('episode_length', step * self.cfg.action_repeat / episode)
             log('episode', self.global_episode)
             log('step', self.global_step)
-            log(f'state_coveraged(out of {num_bucket} bucekts)', state_coveraged_avg)
+            # log(f'state_coveraged(out of {num_bucket} bucekts)', state_coveraged_avg)
+            log(f'state_coveraged(out of {num_bucket} bucekts)', state_coveraged_1)
+            log(f'new_state_coveraged(out of {num_bucket} bucekts)', state_coveraged_2)
             log('num_learned_skills', num_learned_skills)
             
     def distance_reward(self, transition, goal, antigoal):
@@ -569,7 +581,6 @@ class Workspace:
 
             # try to evaluate
             if eval_every_step(self.global_step):
-                if self.global_step != 0:
                     self.logger.log('eval_total_time', self.timer.total_time(),
                                     self.global_frame)
                     self.eval()
