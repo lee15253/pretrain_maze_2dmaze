@@ -132,7 +132,7 @@ class EDLAgent(SACAgent):
 
             if self.use_tb or self.use_wandb:
                 metrics['intr_reward'] = intr_reward.mean().item()
-            reward = intr_reward + extr_reward
+            reward = intr_reward.unsqueeze(1) + extr_reward
         else:
             reward = extr_reward
 

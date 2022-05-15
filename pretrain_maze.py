@@ -77,6 +77,9 @@ class Workspace:
         self.maze_type = cfg.maze_type
         self.dtype = cfg.dtype
         self.sibling_epsilon = cfg.sibling_epsilon
+
+        # device_id
+        os.environ['CUDA_VISIBLE_DEVICES'] = str(cfg.device_id)
         
         utils.set_seed_everywhere(cfg.seed)
         self.device = torch.device(cfg.device)
@@ -119,7 +122,7 @@ class Workspace:
 
         # create wandb
         if cfg.use_wandb:
-            if cfg.wandb_name is None:
+            if cfg.wandb_name == 'None':
                 name = self.exp_name
             else:
                 name = cfg.wandb_name
@@ -403,15 +406,16 @@ class Workspace:
                 self.replay_storage_smm.add(time_step, meta)
                 # try to save snapshot
                 if self.global_frame in self.cfg.snapshots:
-                    self.save_snapshot(pretrain=False)
+                    self.save_snapshot(smm=True)
                 episode_step = 0
                 episode_reward = 0
                 
             # try to evaluate
             if eval_every_step(self.global_step):
-                self.logger.log('eval_total_time', self.timer.total_time(),
-                                self.global_frame)
-                self.pretrain_eval()
+                if self.global_step != 0:
+                    self.logger.log('eval_total_time', self.timer.total_time(),
+                                    self.global_frame)
+                    self.pretrain_eval()
 
             # sample action
             with torch.no_grad(), utils.eval_mode(self.agent.smm):
@@ -559,15 +563,16 @@ class Workspace:
                     self.replay_storage.add(time_step, meta)
                 # try to save snapshot
                 if self.global_frame in self.cfg.snapshots:
-                    self.save_snapshot()
+                    self.save_snapshot(smm=False)
                 episode_step = 0
                 episode_reward = 0
 
             # try to evaluate
             if eval_every_step(self.global_step):
-                self.logger.log('eval_total_time', self.timer.total_time(),
-                                self.global_frame)
-                self.eval()
+                if self.global_step != 0:
+                    self.logger.log('eval_total_time', self.timer.total_time(),
+                                    self.global_frame)
+                    self.eval()
 
             # sample action
             with torch.no_grad(), utils.eval_mode(self.agent):
@@ -597,13 +602,13 @@ class Workspace:
             episode_step += 1
             self._global_step += 1
 
-    def save_snapshot(self, pretrain=True):
+    def save_snapshot(self, smm=True):
         snapshot_dir = self.work_dir / Path(self.cfg.snapshot_dir)
         snapshot_dir.mkdir(exist_ok=True, parents=True)
-        if pretrain:
-            snapshot = snapshot_dir / f'snapshot_pretrain_{self.global_frame}.pt'
+        if smm:
+            snapshot = snapshot_dir / f'snapshot_smm_{self.global_frame}.pt'
         else:
-            snapshot = snapshot_dir / f'snapshot_{self.global_frame}.pt'
+            snapshot = snapshot_dir / f'snapshot_edl_{self.global_frame}.pt'
         keys_to_save = ['agent', '_global_step', '_global_episode']
         payload = {k: self.__dict__[k] for k in keys_to_save}
         with snapshot.open('wb') as f:
@@ -624,10 +629,10 @@ def main(cfg):
     from pretrain_maze import Workspace as W
     root_dir = Path.cwd()
     workspace = W(cfg)
-    snapshot = root_dir / 'snapshot.pt'
-    if snapshot.exists():
-        print(f'resuming: {snapshot}')
-        workspace.load_snapshot()
+    # snapshot = root_dir / 'snapshot.pt'
+    # if snapshot.exists():
+    #     print(f'resuming: {snapshot}')
+    #     workspace.load_snapshot()
     workspace.train()
 
 
