@@ -19,7 +19,7 @@ def run_experiment(experiment):
 if __name__ == '__main__':
     default = ['maximum_timestep=50', 'use_wandb=true', 'agent.batch_size=64', 
     'agent.init_alpha=0.2', 'agent.feature_dim=128','agent.hidden_dim=128',
-    'num_pretrain_frames=510000','oracle_dur=50000', 'num_pretrain_frames=2010000']
+    'num_pretrain_frames=510000','oracle_dur=50000', 'num_train_frames=2010000']
     seeds = ['seed=100', 'seed=101','seed=102', 'seed=103','seed=104','seed=105']
     maze_types = ['maze_type=square_upside', 'maze_type=square_large']
     num_devices = 4
