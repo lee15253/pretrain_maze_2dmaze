@@ -86,7 +86,8 @@ class Workspace:
 
         exp_name = '_'.join([
                 cfg.agent.name, cfg.maze_type, 
-                str(cfg.agent.skill_dim)
+                str(cfg.agent.skill_dim),
+                str(cfg.seed)
             ])
         self.exp_name = exp_name
         # create logger
@@ -251,12 +252,12 @@ class Workspace:
         # imageio.imwrite('abcd.png', rgb_img)
 
         # check state coverage (10x10 격자를 몇개 채웠는지)
-        state_coveraged_1 = self.eval_env.state_coverage_1(trajectory_all=trajectory_all,
-                                                           skill_dim=self.agent.skill_dim)
-        state_coveraged_2 = self.eval_env.state_coverage_2(trajectory_all=trajectory_all,
-                                                           skill_dim=self.agent.skill_dim)
-        log(f'state_coveraged(out of {num_bucket} bucekts)', state_coveraged_1)
-        log(f'new_state_coveraged(out of {num_bucket} bucekts)', state_coveraged_2)
+        # state_coveraged_1 = self.eval_env.state_coverage_1(trajectory_all=trajectory_all,
+        #                                                    skill_dim=self.agent.skill_dim)
+        # state_coveraged_2 = self.eval_env.state_coverage_2(trajectory_all=trajectory_all,
+        #                                                    skill_dim=self.agent.skill_dim)
+        # log(f'state_coveraged(out of {num_bucket} bucekts)', state_coveraged_1)
+        # log(f'new_state_coveraged(out of {num_bucket} bucekts)', state_coveraged_2)
 
         if self.maze_type == 'AntU':
             num_bucket = 150
@@ -267,7 +268,7 @@ class Workspace:
             # log('episode_length', step * self.cfg.action_repeat / episode)
             log('episode', self.global_episode)
             log('step', self.global_step)
-            log(f'state_coveraged(out of {num_bucket} bucekts)', state_coveraged_avg)
+            # log(f'state_coveraged(out of {num_bucket} bucekts)', state_coveraged_avg)
             log('num_learned_skills', 0.0)
 
     def eval(self):
@@ -420,18 +421,17 @@ class Workspace:
                 time_step.action = np.zeros(self.agent.smm.action_dim, dtype=time_step.observation.dtype)
                 meta = self.agent.smm.init_meta()
                 self.replay_storage_smm.add(time_step, meta)
-                # try to save snapshot
-                if self.global_frame in self.cfg.snapshots:
-                    self.save_snapshot(smm=True)
+                # # try to save snapshot
+                # if self.global_frame in self.cfg.snapshots:
+                #     self.save_snapshot(smm=True)
                 episode_step = 0
                 episode_reward = 0
                 
             # try to evaluate
             if eval_every_step(self.global_step):
-                if self.global_step != 0:
-                    self.logger.log('eval_total_time', self.timer.total_time(),
-                                    self.global_frame)
-                    self.pretrain_eval()
+                self.logger.log('eval_total_time', self.timer.total_time(),
+                                self.global_frame)
+                self.pretrain_eval()
 
             # sample action
             with torch.no_grad(), utils.eval_mode(self.agent.smm):
@@ -439,6 +439,10 @@ class Workspace:
                                         meta,
                                         self.global_step,
                                         eval_mode=False)
+
+            # try to save snapshot
+            if self.global_frame in self.cfg.snapshots:
+                self.save_snapshot(smm=True)
 
             # try to update the agent
             if not seed_until_step(self.global_step):
@@ -585,9 +589,9 @@ class Workspace:
 
             # try to evaluate
             if eval_every_step(self.global_step):
-                    self.logger.log('eval_total_time', self.timer.total_time(),
-                                    self.global_frame)
-                    self.eval()
+                self.logger.log('eval_total_time', self.timer.total_time(),
+                                self.global_frame)
+                self.eval()
 
             # sample action
             with torch.no_grad(), utils.eval_mode(self.agent):
@@ -595,6 +599,11 @@ class Workspace:
                                         meta,
                                         self.global_step,
                                         eval_mode=False)
+
+            # try to save snapshot
+            if self.global_frame in self.cfg.snapshots:
+                print('모델 저장(2dmaze),step:',self.global_frame)
+                self.save_snapshot(smm=False)
 
             # try to update the agent
             if (not seed_until_step(self.global_step)):

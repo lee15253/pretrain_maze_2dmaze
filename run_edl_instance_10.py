@@ -17,11 +17,12 @@ def run_experiment(experiment):
 
 
 if __name__ == '__main__':
-    default = ['maximum_timestep=50', 'use_wandb=true', 'agent.batch_size=64', 
+    default = ['maximum_timestep=200', 'use_wandb=true', 'agent.batch_size=64', 
     'agent.init_alpha=0.2', 'agent.feature_dim=128','agent.hidden_dim=128',
-    'num_pretrain_frames=510000','oracle_dur=50000', 'num_train_frames=2010000',
-    'maze_type=square_bottleneck']
-    seeds = ['seed=100', 'seed=101','seed=102', 'seed=103','seed=104', 'seed=105']
+    'num_pretrain_frames=510000','oracle_dur=50000', 'num_train_frames=2100000'
+    'maze_type=square_upside', 'agent.skill_dim=95', 'agent.vae_args.codebook_size=95',
+    'agent.max_skill_dim=95']
+    seeds = ['seed=100', 'seed=101','seed=102', 'seed=103','seed=104']
     num_devices = 4
     num_exp_per_device = 3
     pool_size = num_devices * num_exp_per_device
