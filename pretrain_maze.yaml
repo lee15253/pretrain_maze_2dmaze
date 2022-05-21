@@ -12,14 +12,14 @@ action_repeat: 1 # set to 2 for pixels
 discount: 0.99
 # train settings
 num_pretrain_frames: 500010 # 2000010
-num_train_frames: 2500010 # 9000010
+num_train_frames: 25000010 # 9000010
 num_seed_frames: 4000
 # eval
 eval_every_frames: 100000 
 num_eval_episodes: 10
 # snapshot
-snapshots: [100000, 500000, 1000000, 2000000, 2500000, 4000000, 6000000, 8000000, 9000000]
-snapshot_dir: ../../../models/baselines/${agent.name}/${maze_type}/new/${now:%H%M%S}_skd_${agent.skill_dim}_T_${maximum_timestep}/${seed}
+snapshots: [0, 2000000, 4000000, 6000000,  8000000, 10000000, 12000000, 14000000, 16000000, 18000000, 20000000]
+snapshot_dir: ../../../models/baselines/${agent.name}/${maze_type}/supple/${now:%H%M%S}_skd_${agent.skill_dim}_T_${maximum_timestep}/${seed}
 load_snapshot_dir: ../../../models/states/maze/edl/1/snapshot_2500000.pt
 # replay buffer
 replay_buffer_size: 1000000

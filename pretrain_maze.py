@@ -352,7 +352,7 @@ class Workspace:
 
 
         if self.maze_type == 'AntU':
-            num_bucket = 150
+            num_bucket = 100
         else:
             num_bucket = 100
         with self.logger.log_and_dump_ctx(self.global_frame, ty='eval') as log:

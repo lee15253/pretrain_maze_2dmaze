@@ -379,27 +379,15 @@ class Maze:
         f2.clear()
         plt.close(f2)
 
-    # def state_coverage(self, trajectory_all, skill_dim):        
-    #     state_coveraged = 0
-    #     state_cov = set()
-    #     for n in range(skill_dim):
-    #         for i in np.arange(-0.5,9.5):
-    #             for j in np.arange(-0.5, 9.5):
-    #                 ob = np.array(trajectory_all[n])[:,:,0]
-    #                 if ob[((ob[:,0]<i+1) & (ob[:,0]>=i) & (ob[:,1]<j+1) & (ob[:,1]>=j))].sum() >= 1:
-    #                     state_cov.add((i,j))
-    #         state_coveraged += len(state_cov)
-    #     state_coveraged_avg = state_coveraged / skill_dim
-    #     return state_coveraged_avg
-
     def state_coverage_1(self, trajectory_all, skill_dim):          
         state_cov = set()
         for n in range(skill_dim):
             for i in np.arange(-0.5,9.5):
                 for j in np.arange(-0.5, 9.5):
                     ob = np.array(trajectory_all[n])[:,:,0]
-                    if ob[((ob[:,0]<i+1) & (ob[:,0]>=i) & (ob[:,1]<j+1) & (ob[:,1]>=j))].sum() >= 1:
+                    if len(ob[((ob[:,0]<i+1) & (ob[:,0]>=i) & (ob[:,1]<j+1) & (ob[:,1]>=j))]) >= 1:
                         state_cov.add((i,j))
+        
         return len(state_cov)
 
     def state_coverage_2(self, trajectory_all, skill_dim):          
@@ -418,8 +406,9 @@ class Maze:
         for ob in all_dots:
             for i in np.arange(-0.5,9.5):
                 for j in np.arange(-0.5, 9.5):
-                    if ob[((ob[:,0]<i+1) & (ob[:,0]>=i) & (ob[:,1]<j+1) & (ob[:,1]>=j))].sum() >= 1:
+                    if len(ob[((ob[:,0]<i+1) & (ob[:,0]>=i) & (ob[:,1]<j+1) & (ob[:,1]>=j))]) >= 1:
                         state_cov.add((i,j))
+
         return len(state_cov)
 
 
